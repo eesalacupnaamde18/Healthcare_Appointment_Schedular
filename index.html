@@ -3,29 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MediBook – Medical Appointments</title>
+<title>MediBook – Animated</title>
+
+<!-- Google Font & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-/* ---------- Base & Layout ---------- */
-*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif}
-body{background:#f4f7fb;color:#333;line-height:1.6}
-header{background:#4a90e2;color:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
-header h1{font-size:1.8rem;cursor:pointer}
-nav a{color:#fff;margin-left:1.5rem;text-decoration:none;font-weight:500;transition:.3s}
-nav a:hover{opacity:.8}
-section{max-width:900px;margin:2rem auto;padding:1rem;display:none;animation:fade .4s ease}
+/* ===== Global ===== */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Nunito',sans-serif;
+  background:linear-gradient(135deg,#6dd5ed,#2193b0);
+  color:#fff;overflow-x:hidden;
+}
+header{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);
+  display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem}
+header h1{cursor:pointer;font-size:2rem;font-weight:700;letter-spacing:.5px;}
+nav a{margin-left:1.5rem;text-decoration:none;color:#fff;font-weight:600;position:relative}
+nav a::after{content:'';position:absolute;width:0;height:2px;background:#fff;left:0;bottom:-4px;transition:.3s}
+nav a:hover::after{width:100%}
+
+section{
+  max-width:950px;margin:3rem auto;padding:2rem;
+  background:rgba(255,255,255,.08);border-radius:20px;
+  box-shadow:0 8px 30px rgba(0,0,0,.2);
+  display:none;animation:fadeSlide .6s ease;
+}
 .active{display:block}
-h2{margin-bottom:1rem;text-align:center}
-.card{background:#fff;border-radius:12px;padding:1.5rem;margin:1rem 0;box-shadow:0 4px 8px rgba(0,0,0,0.1)}
-label{display:block;margin:.7rem 0 .2rem}
-input,select,button{width:100%;padding:.6rem;margin-bottom:1rem;border:1px solid #ccc;border-radius:8px}
-button{background:#4a90e2;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:.3s;border:none}
-button:hover{background:#357ab7}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-.doctor-card{padding:1rem;text-align:center;border:1px solid #eee;border-radius:10px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
-@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+h2{text-align:center;margin-bottom:1rem;font-size:2rem;font-weight:700;text-shadow:0 2px 4px rgba(0,0,0,.4)}
+.card{
+  background:rgba(255,255,255,.1);
+  border-radius:15px;
+  padding:1.5rem;
+  margin:1rem 0;
+  box-shadow:0 6px 20px rgba(0,0,0,.15);
+  backdrop-filter:blur(6px);
+  transition:.3s
+}
+.card:hover{transform:translateY(-4px)}
+
+label{display:block;margin-top:1rem;margin-bottom:.3rem;font-weight:600}
+input,select{
+  width:100%;padding:.8rem 1rem;
+  border:2px solid transparent;border-radius:12px;
+  background:rgba(255,255,255,.2);color:#fff;
+  font-size:1rem;outline:none;transition:.3s
+}
+input:focus,select:focus{
+  border-color:#fff;background:rgba(255,255,255,.3);
+  box-shadow:0 0 12px #fff;
+}
+button{
+  width:100%;padding:.9rem;margin-top:1rem;
+  background:#fff;color:#2193b0;font-weight:700;
+  border:none;border-radius:12px;
+  cursor:pointer;font-size:1.1rem;transition:.3s;
+}
+button:hover{background:#eee;transform:scale(1.03)}
+
+/* Doctors grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem;margin-top:1rem}
+.doctor-card img{
+  width:100%;border-radius:12px;margin-bottom:.5rem;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.2));
+  transition:.4s
+}
+.doctor-card:hover img{transform:scale(1.05) rotate(1deg)}
+.doctor-card h3{margin:.5rem 0;font-size:1.2rem}
+
+/* Animations */
+@keyframes fadeSlide{
+  0%{opacity:0;transform:translateY(30px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
+/* Floating background shapes */
+.shape{
+  position:fixed;border-radius:50%;background:rgba(255,255,255,.08);
+  z-index:-1;animation:float 8s infinite ease-in-out alternate;
+}
+.shape.small{width:80px;height:80px;top:10%;left:5%;}
+.shape.medium{width:140px;height:140px;bottom:15%;right:8%;animation-duration:12s}
+.shape.large{width:200px;height:200px;top:40%;right:30%;animation-duration:10s}
+@keyframes float{
+  from{transform:translateY(0) rotate(0deg)}
+  to{transform:translateY(-40px) rotate(360deg)}
+}
 </style>
 </head>
 <body>
+
+<!-- floating decor -->
+<div class="shape small"></div>
+<div class="shape medium"></div>
+<div class="shape large"></div>
 
 <header>
   <h1 onclick="showPage('home')">MediBook</h1>
@@ -40,7 +114,7 @@ button:hover{background:#357ab7}
 <!-- Home -->
 <section id="home" class="active">
   <h2>Welcome to MediBook</h2>
-  <p class="card">Book your doctor appointments quickly and securely. Use the navigation above to explore doctors, book an appointment, or view your bookings.</p>
+  <p class="card">Your futuristic platform for booking doctor appointments with style. Navigate above to meet our specialists, book instantly, and manage your visits—all in one page.</p>
 </section>
 
 <!-- Doctors -->
@@ -54,12 +128,12 @@ button:hover{background:#357ab7}
   <h2>Book an Appointment</h2>
   <form id="appointment-form" class="card">
     <label>Your User ID</label>
-    <input type="number" id="userId" required>
+    <input type="number" id="userId" placeholder="Enter your ID" required>
     <label>Select Doctor</label>
     <select id="doctorSelect" required></select>
     <label>Date & Time</label>
     <input type="datetime-local" id="apptTime" required>
-    <button type="submit">Book</button>
+    <button type="submit">Book Appointment</button>
   </form>
   <p id="bookMsg"></p>
 </section>
@@ -67,25 +141,22 @@ button:hover{background:#357ab7}
 <!-- My Appointments -->
 <section id="myapps">
   <h2>My Appointments</h2>
-  <div class="card">
+  <form class="card" onsubmit="event.preventDefault();fetchAppointments();">
     <label>User ID</label>
-    <input type="number" id="lookupUserId">
-    <button onclick="fetchAppointments()">Show Appointments</button>
-  </div>
+    <input type="number" id="lookupUserId" placeholder="Enter your ID to fetch">
+    <button type="submit">Show Appointments</button>
+  </form>
   <div id="appt-list"></div>
 </section>
 
 <script>
-// ---------- Config ----------
-const API = "http://127.0.0.1:8000";   // FastAPI base URL
+const API="http://127.0.0.1:8000"; // FastAPI backend
 
-// ---------- Navigation ----------
 function showPage(id){
   document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-// ---------- Load Doctors ----------
 async function loadDoctors(){
   showPage('doctors');
   const res = await fetch(`${API}/doctors`);
@@ -93,41 +164,41 @@ async function loadDoctors(){
   const list = document.getElementById('doctor-list');
   list.innerHTML = "";
   docs.forEach(d=>{
-    const c = document.createElement('div');
-    c.className = "doctor-card";
-    c.innerHTML = `<h3>${d.name}</h3><p>${d.specialty}</p>`;
+    const c=document.createElement('div');
+    c.className="doctor-card card";
+    c.innerHTML=`<img src="https://source.unsplash.com/300x200/?doctor,${encodeURIComponent(d.specialty)}" alt="Doctor">
+                 <h3>${d.name}</h3><p>${d.specialty}</p>`;
     list.appendChild(c);
   });
-  // also fill select for booking
-  const sel = document.getElementById('doctorSelect');
-  sel.innerHTML = docs.map(d=>`<option value="${d.id}">${d.name} – ${d.specialty}</option>`).join('');
+  // fill select
+  const sel=document.getElementById('doctorSelect');
+  sel.innerHTML=docs.map(d=>`<option value="${d.id}">${d.name} – ${d.specialty}</option>`).join('');
 }
 
-// ---------- Book Appointment ----------
+function loadBook(){ showPage('book'); }
+
 document.getElementById('appointment-form').addEventListener('submit', async e=>{
   e.preventDefault();
-  const payload = {
-    user_id: +document.getElementById('userId').value,
-    doctor_id: +document.getElementById('doctorSelect').value,
-    appointment_time: document.getElementById('apptTime').value
+  const payload={
+    user_id:+document.getElementById('userId').value,
+    doctor_id:+document.getElementById('doctorSelect').value,
+    appointment_time:document.getElementById('apptTime').value
   };
-  const r = await fetch(`${API}/appointments/`,{
+  const r=await fetch(`${API}/appointments/`,{
     method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
   });
-  document.getElementById('bookMsg').textContent =
-      r.ok ? "✅ Appointment booked!" : "❌ Booking failed.";
-  document.getElementById('appointment-form').reset();
+  document.getElementById('bookMsg').textContent = r.ok ? "✅ Appointment booked!" : "❌ Booking failed.";
+  e.target.reset();
 });
 
-// ---------- Fetch Appointments ----------
 async function fetchAppointments(){
-  const uid = document.getElementById('lookupUserId').value;
+  const uid=document.getElementById('lookupUserId').value;
   if(!uid) return;
-  const r = await fetch(`${API}/appointments/${uid}`);
-  const apps = await r.json();
-  const div = document.getElementById('appt-list');
-  div.innerHTML = apps.length
-   ? apps.map(a=>`<div class="card"><b>ID:</b> ${a.id} — Doctor ${a.doctor_id} on ${new Date(a.appointment_time).toLocaleString()} [${a.status}]</div>`).join('')
+  const r=await fetch(`${API}/appointments/${uid}`);
+  const apps=await r.json();
+  const div=document.getElementById('appt-list');
+  div.innerHTML=apps.length
+   ? apps.map(a=>`<div class="card"><b>Doctor:</b> ${a.doctor_id} <br><b>Date:</b> ${new Date(a.appointment_time).toLocaleString()} <br><b>Status:</b> ${a.status}</div>`).join('')
    : "<p class='card'>No appointments found.</p>";
 }
 </script>
