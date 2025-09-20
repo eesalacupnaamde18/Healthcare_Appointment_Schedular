@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Appointment Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f2f2f2; }
+        h1 { color: #2c3e50; }
+        label { display: block; margin-top: 10px; }
+        input, select, button { padding: 8px; margin-top: 5px; width: 250px; }
+        button { width: 150px; margin-top: 15px; background-color: #3498db; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #2980b9; }
+        .container { background: white; padding: 20px; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+    </style>
+</head>
+<body>
+
+<h1>Medical Appointment Booking</h1>
+
+<div class="container">
+    <h2>Create User</h2>
+    <label>Name:</label>
+    <input type="text" id="userName">
+    <label>Email:</label>
+    <input type="email" id="userEmail">
+    <label>Password:</label>
+    <input type="password" id="userPassword">
+    <button onclick="createUser()">Create User</button>
+</div>
+
+<div class="container">
+    <h2>Add Doctor</h2>
+    <label>Name:</label>
+    <input type="text" id="doctorName">
+    <label>Specialty:</label>
+    <input type="text" id="doctorSpecialty">
+    <button onclick="addDoctor()">Add Doctor</button>
+</div>
+
+<div class="container">
+    <h2>Book Appointment</h2>
+    <label>User ID:</label>
+    <input type="number" id="appointmentUserId">
+    <label>Doctor ID:</label>
+    <input type="number" id="appointmentDoctorId">
+    <label>Appointment Time (YYYY-MM-DD HH:MM:SS):</label>
+    <input type="text" id="appointmentTime">
+    <button onclick="bookAppointment()">Book Appointment</button>
+</div>
+
+<div class="container">
+    <h2>View Appointments</h2>
+    <label>User ID:</label>
+    <input type="number" id="viewUserId">
+    <button onclick="viewAppointments()">View Appointments</button>
+    <table id="appointmentsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Doctor ID</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+const API_URL = "http://127.0.0.1:8000";
+
+// Create User
+function createUser() {
+    fetch(`${API_URL}/users/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: document.getElementById("userName").value,
+            email: document.getElementById("userEmail").value,
+            password: document.getElementById("userPassword").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert("User created: ID " + data.id))
+    .catch(err => alert("Error: " + err));
+}
+
+// Add Doctor
+function addDoctor() {
+    fetch(`${API_URL}/doctors/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: document.getElementById("doctorName").value,
+            specialty: document.getElementById("doctorSpecialty").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert("Doctor added: ID " + data.id))
+    .catch(err => alert("Error: " + err));
+}
+
+// Book Appointment
+function bookAppointment() {
+    fetch(`${API_URL}/appointments/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            user_id: parseInt(document.getElementById("appointmentUserId").value),
+            doctor_id: parseInt(document.getElementById("appointmentDoctorId").value),
+            appointment_time: document.getElementById("appointmentTime").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert("Appointment booked: ID " + data.id))
+    .catch(err => alert("Error: " + err));
+}
+
+// View Appointments
+function viewAppointments() {
+    const userId = document.getElementById("viewUserId").value;
+    fetch(`${API_URL}/appointments/${userId}`)
+    .then(res => res.json())
+    .then(data => {
+        const tbody = document.getElementById("appointmentsTable").querySelector("tbody");
+        tbody.innerHTML = "";
+        data.forEach(app => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = app.id;
+            row.insertCell(1).innerText = app.doctor_id;
+            row.insertCell(2).innerText = app.appointment_time;
+            row.insertCell(3).innerText = app.status;
+        });
+    })
+    .catch(err => alert("Error: " + err));
+}
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Appointment Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f2f2f2; }
+        h1 { color: #2c3e50; }
+        label { display: block; margin-top: 10px; }
+        input, select, button { padding: 8px; margin-top: 5px; width: 250px; }
+        button { width: 150px; margin-top: 15px; background-color: #3498db; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #2980b9; }
+        .container { background: white; padding: 20px; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+    </style>
+</head>
+<body>
+
+<h1>Medical Appointment Booking</h1>
+
+<div class="container">
+    <h2>Create User</h2>
+    <label>Name:</label>
+    <input type="text" id="userName">
+    <label>Email:</label>
+    <input type="email" id="userEmail">
+    <label>Password:</label>
+    <input type="password" id="userPassword">
+    <button onclick="createUser()">Create User</button>
+</div>
+
+<div class="container">
+    <h2>Add Doctor</h2>
+    <label>Name:</label>
+    <input type="text" id="doctorName">
+    <label>Specialty:</label>
+    <input type="text" id="doctorSpecialty">
+    <button onclick="addDoctor()">Add Doctor</button>
+</div>
+
+<div class="container">
+    <h2>Book Appointment</h2>
+    <label>User ID:</label>
+    <input type="number" id="appointmentUserId">
+    <label>Doctor ID:</label>
+    <input type="number" id="appointmentDoctorId">
+    <label>Appointment Time (YYYY-MM-DD HH:MM:SS):</label>
+    <input type="text" id="appointmentTime">
+    <button onclick="bookAppointment()">Book Appointment</button>
+</div>
+
+<div class="container">
+    <h2>View Appointments</h2>
+    <label>User ID:</label>
+    <input type="number" id="viewUserId">
+    <button onclick="viewAppointments()">View Appointments</button>
+    <table id="appointmentsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Doctor ID</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+const API_URL = "http://127.0.0.1:8000";
+
+// Create User
+function createUser() {
+    fetch(`${API_URL}/users/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: document.getElementById("userName").value,
+            email: document.getElementById("userEmail").value,
+            password: document.getElementById("userPassword").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert("User created: ID " + data.id))
+    .catch(err => alert("Error: " + err));
+}
+
+// Add Doctor
+function addDoctor() {
+    fetch(`${API_URL}/doctors/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: document.getElementById("doctorName").value,
+            specialty: document.getElementById("doctorSpecialty").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert("Doctor added: ID " + data.id))
+    .catch(err => alert("Error: " + err));
+}
+
+// Book Appointment
+function bookAppointment() {
+    fetch(`${API_URL}/appointments/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            user_id: parseInt(document.getElementById("appointmentUserId").value),
+            doctor_id: parseInt(document.getElementById("appointmentDoctorId").value),
+            appointment_time: document.getElementById("appointmentTime").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert("Appointment booked: ID " + data.id))
+    .catch(err => alert("Error: " + err));
+}
+
+// View Appointments
+function viewAppointments() {
+    const userId = document.getElementById("viewUserId").value;
+    fetch(`${API_URL}/appointments/${userId}`)
+    .then(res => res.json())
+    .then(data => {
+        const tbody = document.getElementById("appointmentsTable").querySelector("tbody");
+        tbody.innerHTML = "";
+        data.forEach(app => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = app.id;
+            row.insertCell(1).innerText = app.doctor_id;
+            row.insertCell(2).innerText = app.appointment_time;
+            row.insertCell(3).innerText = app.status;
+        });
+    })
+    .catch(err => alert("Error: " + err));
+}
+</script>
+
+</body>
+</html>
