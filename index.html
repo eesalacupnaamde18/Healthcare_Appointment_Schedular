@@ -1,206 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MediBook – Animated</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediBook – Book Doctor Appointments</title>
 
-<!-- Google Font & Icons -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-<style>
-/* ===== Global ===== */
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:'Nunito',sans-serif;
-  background:linear-gradient(135deg,#6dd5ed,#2193b0);
-  color:#fff;overflow-x:hidden;
-}
-header{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);
-  display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem}
-header h1{cursor:pointer;font-size:2rem;font-weight:700;letter-spacing:.5px;}
-nav a{margin-left:1.5rem;text-decoration:none;color:#fff;font-weight:600;position:relative}
-nav a::after{content:'';position:absolute;width:0;height:2px;background:#fff;left:0;bottom:-4px;transition:.3s}
-nav a:hover::after{width:100%}
+  <style>
+    :root {
+      --primary: #0a7bc2;
+      --secondary: #00c2a8;
+      --bg-light: #f9f9f9;
+      --text-dark: #333;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
 
-section{
-  max-width:950px;margin:3rem auto;padding:2rem;
-  background:rgba(255,255,255,.08);border-radius:20px;
-  box-shadow:0 8px 30px rgba(0,0,0,.2);
-  display:none;animation:fadeSlide .6s ease;
-}
-.active{display:block}
+    /* ===== Navbar ===== */
+    header.navbar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      background: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      z-index: 1000;
+      animation: slideDown 0.8s ease;
+    }
+    .logo { font-weight: 600; font-size: 1.6rem; color: var(--primary); }
+    nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover { color: var(--primary); }
 
-h2{text-align:center;margin-bottom:1rem;font-size:2rem;font-weight:700;text-shadow:0 2px 4px rgba(0,0,0,.4)}
-.card{
-  background:rgba(255,255,255,.1);
-  border-radius:15px;
-  padding:1.5rem;
-  margin:1rem 0;
-  box-shadow:0 6px 20px rgba(0,0,0,.15);
-  backdrop-filter:blur(6px);
-  transition:.3s
-}
-.card:hover{transform:translateY(-4px)}
+    /* ===== Hero ===== */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 7rem 2rem 5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      animation: fadeIn 1s ease;
+    }
+    .hero h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+    .hero p  { font-size: 1.1rem; max-width: 600px; }
+    .btn {
+      margin-top: 1.5rem;
+      display: inline-block;
+      padding: 0.8rem 1.8rem;
+      background: #fff;
+      color: var(--primary);
+      font-weight: 600;
+      border-radius: 30px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn:hover { background: var(--secondary); color: #fff; }
 
-label{display:block;margin-top:1rem;margin-bottom:.3rem;font-weight:600}
-input,select{
-  width:100%;padding:.8rem 1rem;
-  border:2px solid transparent;border-radius:12px;
-  background:rgba(255,255,255,.2);color:#fff;
-  font-size:1rem;outline:none;transition:.3s
-}
-input:focus,select:focus{
-  border-color:#fff;background:rgba(255,255,255,.3);
-  box-shadow:0 0 12px #fff;
-}
-button{
-  width:100%;padding:.9rem;margin-top:1rem;
-  background:#fff;color:#2193b0;font-weight:700;
-  border:none;border-radius:12px;
-  cursor:pointer;font-size:1.1rem;transition:.3s;
-}
-button:hover{background:#eee;transform:scale(1.03)}
+    /* ===== Doctors Section ===== */
+    .section-title {
+      text-align: center;
+      margin-top: 4rem;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--primary);
+      animation: fadeUp 1s ease;
+    }
+    .doctor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .doctor-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUp 0.8s forwards;
+    }
+    .doctor-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    .doctor-card h3 {
+      margin: 0.75rem 0 0.25rem;
+      font-size: 1.2rem;
+      color: var(--text-dark);
+    }
+    .specialty {
+      color: var(--secondary);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .doctor-card p {
+      padding: 0 1rem 1rem;
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .doctor-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
 
-/* Doctors grid */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem;margin-top:1rem}
-.doctor-card img{
-  width:100%;border-radius:12px;margin-bottom:.5rem;
-  filter:drop-shadow(0 4px 6px rgba(0,0,0,.2));
-  transition:.4s
-}
-.doctor-card:hover img{transform:scale(1.05) rotate(1deg)}
-.doctor-card h3{margin:.5rem 0;font-size:1.2rem}
+    /* ===== Footer ===== */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #fff;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
 
-/* Animations */
-@keyframes fadeSlide{
-  0%{opacity:0;transform:translateY(30px)}
-  100%{opacity:1;transform:translateY(0)}
-}
-
-/* Floating background shapes */
-.shape{
-  position:fixed;border-radius:50%;background:rgba(255,255,255,.08);
-  z-index:-1;animation:float 8s infinite ease-in-out alternate;
-}
-.shape.small{width:80px;height:80px;top:10%;left:5%;}
-.shape.medium{width:140px;height:140px;bottom:15%;right:8%;animation-duration:12s}
-.shape.large{width:200px;height:200px;top:40%;right:30%;animation-duration:10s}
-@keyframes float{
-  from{transform:translateY(0) rotate(0deg)}
-  to{transform:translateY(-40px) rotate(360deg)}
-}
-</style>
+    /* ===== Animations ===== */
+    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+    @keyframes slideDown { from {transform: translateY(-100%);} to {transform: translateY(0);} }
+    @keyframes fadeUp {
+      from {opacity: 0; transform: translateY(40px);}
+      to   {opacity: 1; transform: translateY(0);}
+    }
+  </style>
 </head>
 <body>
+  <!-- ===== Navbar ===== -->
+  <header class="navbar">
+    <h1 class="logo">MediBook</h1>
+    <nav>
+      <a href="doctors.html">Doctors</a>
+      <a href="appointment.html">Book</a>
+      <a href="my_appointments.html">My Appointments</a>
+    </nav>
+  </header>
 
-<!-- floating decor -->
-<div class="shape small"></div>
-<div class="shape medium"></div>
-<div class="shape large"></div>
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <h2>Book Your Doctor with Ease</h2>
+    <p>Trusted specialists across Neurology, Orthopedics, Pediatrics and more.  
+       Get an appointment in just a few clicks.</p>
+    <a class="btn" href="doctors.html">Find a Doctor</a>
+  </section>
 
-<header>
-  <h1 onclick="showPage('home')">MediBook</h1>
-  <nav>
-    <a href="#" onclick="showPage('home')">Home</a>
-    <a href="#" onclick="loadDoctors()">Doctors</a>
-    <a href="#" onclick="loadBook()">Book</a>
-    <a href="#" onclick="showPage('myapps')">My Appointments</a>
-  </nav>
-</header>
+  <!-- ===== Doctors Section ===== -->
+  <h2 class="section-title">Top Doctors</h2>
+  <div id="doctor-list" class="doctor-grid"></div>
 
-<!-- Home -->
-<section id="home" class="active">
-  <h2>Welcome to MediBook</h2>
-  <p class="card">Your futuristic platform for booking doctor appointments with style. Navigate above to meet our specialists, book instantly, and manage your visits—all in one page.</p>
-</section>
+  <!-- ===== Footer ===== -->
+  <footer>
+    &copy; 2025 MediBook – Your Health, Our Priority
+  </footer>
 
-<!-- Doctors -->
-<section id="doctors">
-  <h2>Our Doctors</h2>
-  <div id="doctor-list" class="grid"></div>
-</section>
+  <!-- ===== JS ===== -->
+  <script>
+    const API = "http://127.0.0.1:8000"; // adjust if backend port differs
 
-<!-- Book Appointment -->
-<section id="book">
-  <h2>Book an Appointment</h2>
-  <form id="appointment-form" class="card">
-    <label>Your User ID</label>
-    <input type="number" id="userId" placeholder="Enter your ID" required>
-    <label>Select Doctor</label>
-    <select id="doctorSelect" required></select>
-    <label>Date & Time</label>
-    <input type="datetime-local" id="apptTime" required>
-    <button type="submit">Book Appointment</button>
-  </form>
-  <p id="bookMsg"></p>
-</section>
+    async function loadDoctors() {
+      try {
+        const res = await fetch(`${API}/doctors/`);
+        if (!res.ok) throw new Error("Failed to fetch doctors");
+        const doctors = await res.json();
 
-<!-- My Appointments -->
-<section id="myapps">
-  <h2>My Appointments</h2>
-  <form class="card" onsubmit="event.preventDefault();fetchAppointments();">
-    <label>User ID</label>
-    <input type="number" id="lookupUserId" placeholder="Enter your ID to fetch">
-    <button type="submit">Show Appointments</button>
-  </form>
-  <div id="appt-list"></div>
-</section>
+        const container = document.getElementById("doctor-list");
+        container.innerHTML = doctors.slice(0,6).map((d,i) => `
+          <div class="doctor-card" style="animation-delay:${i*0.1}s">
+            <img src="${d.image_url}" alt="${d.name}">
+            <h3>Dr. ${d.name}</h3>
+            <div class="specialty">${d.specialty}</div>
+            <p>${d.description || "Experienced and caring specialist."}</p>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        document.getElementById("doctor-list").innerHTML =
+          "<p style='text-align:center;color:red;'>Unable to load doctors. Ensure the backend is running.</p>";
+      }
+    }
 
-<script>
-const API="http://127.0.0.1:8000"; // FastAPI backend
-
-function showPage(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-async function loadDoctors(){
-  showPage('doctors');
-  const res = await fetch(`${API}/doctors`);
-  const docs = await res.json();
-  const list = document.getElementById('doctor-list');
-  list.innerHTML = "";
-  docs.forEach(d=>{
-    const c=document.createElement('div');
-    c.className="doctor-card card";
-    c.innerHTML=`<img src="https://source.unsplash.com/300x200/?doctor,${encodeURIComponent(d.specialty)}" alt="Doctor">
-                 <h3>${d.name}</h3><p>${d.specialty}</p>`;
-    list.appendChild(c);
-  });
-  // fill select
-  const sel=document.getElementById('doctorSelect');
-  sel.innerHTML=docs.map(d=>`<option value="${d.id}">${d.name} – ${d.specialty}</option>`).join('');
-}
-
-function loadBook(){ showPage('book'); }
-
-document.getElementById('appointment-form').addEventListener('submit', async e=>{
-  e.preventDefault();
-  const payload={
-    user_id:+document.getElementById('userId').value,
-    doctor_id:+document.getElementById('doctorSelect').value,
-    appointment_time:document.getElementById('apptTime').value
-  };
-  const r=await fetch(`${API}/appointments/`,{
-    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
-  });
-  document.getElementById('bookMsg').textContent = r.ok ? "✅ Appointment booked!" : "❌ Booking failed.";
-  e.target.reset();
-});
-
-async function fetchAppointments(){
-  const uid=document.getElementById('lookupUserId').value;
-  if(!uid) return;
-  const r=await fetch(`${API}/appointments/${uid}`);
-  const apps=await r.json();
-  const div=document.getElementById('appt-list');
-  div.innerHTML=apps.length
-   ? apps.map(a=>`<div class="card"><b>Doctor:</b> ${a.doctor_id} <br><b>Date:</b> ${new Date(a.appointment_time).toLocaleString()} <br><b>Status:</b> ${a.status}</div>`).join('')
-   : "<p class='card'>No appointments found.</p>";
-}
-</script>
+    document.addEventListener("DOMContentLoaded", loadDoctors);
+  </script>
 </body>
 </html>
