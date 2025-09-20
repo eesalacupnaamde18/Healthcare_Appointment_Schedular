@@ -1,244 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Medical Appointment Scheduler</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-        }
-        .container {
-            background: #fff;
-            padding: 25px;
-            margin: 20px auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            max-width: 500px;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-            color: #34495e;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        table {
-            width: 100%;
-            margin-top: 15px;
-            border-collapse: collapse;
-            text-align: left;
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #3498db;
-            color: #fff;
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediBook – Medical Appointments</title>
+<style>
+/* ---------- Base & Layout ---------- */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif}
+body{background:#f4f7fb;color:#333;line-height:1.6}
+header{background:#4a90e2;color:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+header h1{font-size:1.8rem;cursor:pointer}
+nav a{color:#fff;margin-left:1.5rem;text-decoration:none;font-weight:500;transition:.3s}
+nav a:hover{opacity:.8}
+section{max-width:900px;margin:2rem auto;padding:1rem;display:none;animation:fade .4s ease}
+.active{display:block}
+h2{margin-bottom:1rem;text-align:center}
+.card{background:#fff;border-radius:12px;padding:1.5rem;margin:1rem 0;box-shadow:0 4px 8px rgba(0,0,0,0.1)}
+label{display:block;margin:.7rem 0 .2rem}
+input,select,button{width:100%;padding:.6rem;margin-bottom:1rem;border:1px solid #ccc;border-radius:8px}
+button{background:#4a90e2;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:.3s;border:none}
+button:hover{background:#357ab7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.doctor-card{padding:1rem;text-align:center;border:1px solid #eee;border-radius:10px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 
-<h1>Medical Appointment Booking</h1>
+<header>
+  <h1 onclick="showPage('home')">MediBook</h1>
+  <nav>
+    <a href="#" onclick="showPage('home')">Home</a>
+    <a href="#" onclick="loadDoctors()">Doctors</a>
+    <a href="#" onclick="loadBook()">Book</a>
+    <a href="#" onclick="showPage('myapps')">My Appointments</a>
+  </nav>
+</header>
 
-<div class="container">
-    <h2 class="section-title">Create User</h2>
-    <label>Name</label>
-    <input type="text" id="userName">
-    <label>Email</label>
-    <input type="email" id="userEmail">
-    <label>Password</label>
-    <input type="password" id="userPassword">
-    <button onclick="createUser()">Create User</button>
-</div>
+<!-- Home -->
+<section id="home" class="active">
+  <h2>Welcome to MediBook</h2>
+  <p class="card">Book your doctor appointments quickly and securely. Use the navigation above to explore doctors, book an appointment, or view your bookings.</p>
+</section>
 
-<div class="container">
-    <h2 class="section-title">Add Doctor</h2>
-    <label>Name</label>
-    <input type="text" id="doctorName">
-    <label>Specialty</label>
-    <input type="text" id="doctorSpecialty">
-    <button onclick="addDoctor()">Add Doctor</button>
-</div>
+<!-- Doctors -->
+<section id="doctors">
+  <h2>Our Doctors</h2>
+  <div id="doctor-list" class="grid"></div>
+</section>
 
-<div class="container">
-    <h2 class="section-title">Book Appointment</h2>
-    <label>User</label>
-    <select id="appointmentUserId"></select>
-    <label>Doctor</label>
-    <select id="appointmentDoctorId"></select>
-    <label>Appointment Time</label>
-    <input type="datetime-local" id="appointmentTime">
-    <button onclick="bookAppointment()">Book Appointment</button>
-</div>
+<!-- Book Appointment -->
+<section id="book">
+  <h2>Book an Appointment</h2>
+  <form id="appointment-form" class="card">
+    <label>Your User ID</label>
+    <input type="number" id="userId" required>
+    <label>Select Doctor</label>
+    <select id="doctorSelect" required></select>
+    <label>Date & Time</label>
+    <input type="datetime-local" id="apptTime" required>
+    <button type="submit">Book</button>
+  </form>
+  <p id="bookMsg"></p>
+</section>
 
-<div class="container">
-    <h2 class="section-title">View Appointments</h2>
-    <label>Select User</label>
-    <select id="viewUserId"></select>
-    <button onclick="viewAppointments()">View Appointments</button>
-    <table id="appointmentsTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Doctor</th>
-                <th>Time</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
+<!-- My Appointments -->
+<section id="myapps">
+  <h2>My Appointments</h2>
+  <div class="card">
+    <label>User ID</label>
+    <input type="number" id="lookupUserId">
+    <button onclick="fetchAppointments()">Show Appointments</button>
+  </div>
+  <div id="appt-list"></div>
+</section>
 
 <script>
-const API_URL = "http://127.0.0.1:8000";
+// ---------- Config ----------
+const API = "http://127.0.0.1:8000";   // FastAPI base URL
 
-// Helper: Fetch users and populate dropdowns
-function loadUsers() {
-    fetch(`${API_URL}/users/`)
-    .then(res => res.json())
-    .then(users => {
-        const appointmentUser = document.getElementById("appointmentUserId");
-        const viewUser = document.getElementById("viewUserId");
-        appointmentUser.innerHTML = "";
-        viewUser.innerHTML = "";
-        users.forEach(u => {
-            const option1 = document.createElement("option");
-            option1.value = u.id;
-            option1.text = `${u.id} - ${u.name}`;
-            appointmentUser.add(option1);
-
-            const option2 = document.createElement("option");
-            option2.value = u.id;
-            option2.text = `${u.id} - ${u.name}`;
-            viewUser.add(option2);
-        });
-    });
+// ---------- Navigation ----------
+function showPage(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
-// Helper: Fetch doctors and populate dropdown
-function loadDoctors() {
-    fetch(`${API_URL}/doctors/`)
-    .then(res => res.json())
-    .then(doctors => {
-        const doctorSelect = document.getElementById("appointmentDoctorId");
-        doctorSelect.innerHTML = "";
-        doctors.forEach(d => {
-            const option = document.createElement("option");
-            option.value = d.id;
-            option.text = `${d.id} - ${d.name} (${d.specialty})`;
-            doctorSelect.add(option);
-        });
-    });
+// ---------- Load Doctors ----------
+async function loadDoctors(){
+  showPage('doctors');
+  const res = await fetch(`${API}/doctors`);
+  const docs = await res.json();
+  const list = document.getElementById('doctor-list');
+  list.innerHTML = "";
+  docs.forEach(d=>{
+    const c = document.createElement('div');
+    c.className = "doctor-card";
+    c.innerHTML = `<h3>${d.name}</h3><p>${d.specialty}</p>`;
+    list.appendChild(c);
+  });
+  // also fill select for booking
+  const sel = document.getElementById('doctorSelect');
+  sel.innerHTML = docs.map(d=>`<option value="${d.id}">${d.name} – ${d.specialty}</option>`).join('');
 }
 
-// Create User
-function createUser() {
-    fetch(`${API_URL}/users/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            name: document.getElementById("userName").value,
-            email: document.getElementById("userEmail").value,
-            password: document.getElementById("userPassword").value
-        })
-    })
-    .then(res => res.json())
-    .then(data => { alert("User created: " + data.name); loadUsers(); })
-    .catch(err => alert("Error: " + err));
-}
+// ---------- Book Appointment ----------
+document.getElementById('appointment-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const payload = {
+    user_id: +document.getElementById('userId').value,
+    doctor_id: +document.getElementById('doctorSelect').value,
+    appointment_time: document.getElementById('apptTime').value
+  };
+  const r = await fetch(`${API}/appointments/`,{
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
+  });
+  document.getElementById('bookMsg').textContent =
+      r.ok ? "✅ Appointment booked!" : "❌ Booking failed.";
+  document.getElementById('appointment-form').reset();
+});
 
-// Add Doctor
-function addDoctor() {
-    fetch(`${API_URL}/doctors/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            name: document.getElementById("doctorName").value,
-            specialty: document.getElementById("doctorSpecialty").value
-        })
-    })
-    .then(res => res.json())
-    .then(data => { alert("Doctor added: " + data.name); loadDoctors(); })
-    .catch(err => alert("Error: " + err));
-}
-
-// Book Appointment
-function bookAppointment() {
-    fetch(`${API_URL}/appointments/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            user_id: parseInt(document.getElementById("appointmentUserId").value),
-            doctor_id: parseInt(document.getElementById("appointmentDoctorId").value),
-            appointment_time: document.getElementById("appointmentTime").value
-        })
-    })
-    .then(res => res.json())
-    .then(data => alert("Appointment booked! ID: " + data.id))
-    .catch(err => alert("Error: " + err));
-}
-
-// View Appointments
-function viewAppointments() {
-    const userId = document.getElementById("viewUserId").value;
-    fetch(`${API_URL}/appointments/${userId}`)
-    .then(res => res.json())
-    .then(data => {
-        const tbody = document.getElementById("appointmentsTable").querySelector("tbody");
-        tbody.innerHTML = "";
-        data.forEach(app => {
-            const row = tbody.insertRow();
-            row.insertCell(0).innerText = app.id;
-            row.insertCell(1).innerText = app.doctor_id;
-            row.insertCell(2).innerText = new Date(app.appointment_time).toLocaleString();
-            row.insertCell(3).innerText = app.status;
-        });
-    })
-    .catch(err => alert("Error: " + err));
-}
-
-// Load users and doctors on page load
-window.onload = () => {
-    loadUsers();
-    loadDoctors();
+// ---------- Fetch Appointments ----------
+async function fetchAppointments(){
+  const uid = document.getElementById('lookupUserId').value;
+  if(!uid) return;
+  const r = await fetch(`${API}/appointments/${uid}`);
+  const apps = await r.json();
+  const div = document.getElementById('appt-list');
+  div.innerHTML = apps.length
+   ? apps.map(a=>`<div class="card"><b>ID:</b> ${a.id} — Doctor ${a.doctor_id} on ${new Date(a.appointment_time).toLocaleString()} [${a.status}]</div>`).join('')
+   : "<p class='card'>No appointments found.</p>";
 }
 </script>
-
 </body>
 </html>
